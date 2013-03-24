@@ -13,5 +13,5 @@
                  [cheshire "4.0.3"]]
   :plugins [[lein-ring "0.8.2"]]
   :ring {:handler cljr-rest.handler/app}
-  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}}
-  :main cljr-rest.core)
+  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}})
+;;  :main cljr-rest.core)
