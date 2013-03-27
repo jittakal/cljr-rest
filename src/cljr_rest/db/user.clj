@@ -5,14 +5,14 @@
   (:use cljr-rest.common)  
   (:require [clojure.java.jdbc :as sql]))
 
-(defn get-all-users 
+(defn get-all
   "Get list of all users"
   []
   (with-conn-trans
     (sql/with-query-results results
                             ["select * from users"]
                             (into [] results))))
-(defn get-user
+(defn get-by-id
   [id]
   (try
     (with-conn-trans
@@ -22,25 +22,25 @@
   (catch Exception e
     (err-handler "SQL-100" e))))
 
-(defn create-new-user 
+(defn create-new
   [iuser]
   (let [id (uuid)]
     (try
       (with-conn-trans
         (let [user (assoc iuser "id" id)]
           (sql/insert-record :users user)))
-      (get-user id)
+      (get-by-id id)
       (catch Exception e
         (err-handler "SQL-100" e)))))
 
-(defn update-user
+(defn update
   [id iuser]
   (with-conn-trans
     (let [user (assoc iuser "id" id)]
       (sql/update-values :users ["id=?" id] user)))
-  (get-user id))
+  (get-by-id id))
 
-(defn delete-user 
+(defn delete
   [id]
   (with-conn-trans
     (sql/delete-rows :users ["id=?" id])))

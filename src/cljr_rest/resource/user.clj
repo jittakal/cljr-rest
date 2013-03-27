@@ -6,25 +6,25 @@
   (:use [clojure.tools.logging :only (info error)])
   (:require [cljr-rest.db.user :as db-user]))
 
-(defn get-user-res
+(defn by-id
   "Get User"
   [id]
   (info (str *ns* " # " id))
-  (let [result (db-user/get-user id)]
+  (let [result (db-user/get-by-id id)]
     (cond
      (empty? result)  (status {:body (str "User having id " id " does not exists.")} 404)
      (contains? result :error-code) (status result 500)
      :else (response result))))
 
-(defn get-all-users-res
+(defn all
   "Get All users"
   []
-  (response (db-user/get-all-users)))
+  (response (db-user/get-all)))
 
 
-(defn create-user-res
+(defn create
   [iuser]
-  (let [result (db-user/create-new-user iuser)]
+  (let [result (db-user/create-new iuser)]
     (cond     
      (empty? result) (status result 204)
      (contains? result :error-code) (status result 500)
@@ -36,20 +36,20 @@
     (if (not= name "Jitendra")
       {:status 400
        :msg "Name is not equals to Jitendra"}
-      (create-user-res iuser))))
+      (create iuser))))
 
-(defn update-user-res
+(defn update
   [id iuser]
-  (let [result (db-user/update-user id iuser)]
+  (let [result (db-user/update id iuser)]
     (cond     
-     (empty? result) (status result 204)
+     (empty? result) (status result 404)
      (contains? result :error-code) (status result 500)
      :else (response result))))
 
-(defn delete-user-res
+(defn delete
   "Delete user"
   [id]
-  (let [result (db-user/delete-user id)]
+  (let [result (db-user/delete id)]
     (cond     
      (empty? result) (status result 204)
      (contains? result :error-code) (status result 500)
